@@ -1,0 +1,13 @@
+.idea/
+*.iml
+target/
+target-eclipse/
+
+.classpath
+.project
+.settings/
+
+out/
+
+*.log
+*.swp
