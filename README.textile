@@ -1,0 +1,56 @@
+h1. Mustache Plugin
+
+Integrate "Mustache":http://mustache.github.com/ into your Grails project.
+
+Mustache provides Logic-less templates that are a great tool for HTML layout, especially in the context of building javascript powered pages within a web browser. Now, thanks to "mustache.java":https://github.com/spullara/mustache.java, you can interpret Mustache templates from the server as well.
+
+This plugin serves to enable both server-side and client-side use of Mustache while maintaining a DRY methodology (i.e. you can use the same Mustache templates on the client and server).
+
+h2. Tags
+
+Two tags are provided in the "mustache" namespace; *render* and *layoutTemplates*
+
+h3. mustache:render
+
+Renders inline Mustache template code or Mustache template files server-side. Inline Mustache templates can also be written as script elements within the page for use by javascript.
+
+h4. attributes
+
+* *model*: (required) The object instance to use as the data model for the template.
+* *tid* : The Document id to use for a script element for use by javascript
+* *href* : The path, relative to server root, of a Mustache template file (tid is ignored)
+
+h3. mustache:layoutTemplates
+
+Renders script elements for each of the inline templates that were given a *tid* attribute. In practice, this is placed near the closing tag for the body div element.
+
+h3. Examples
+
+*Example*: Inline mustache with script generation
+
+bc. <mustache:render model="${user}" tid="user-greeting">
+  Hello {{fullname}}. 
+  {{#isLoggedIn}}
+    We're glad you logged in.
+  {{/isLoggedIn}}
+</mustache:render>
+...
+<mustache:layoutResources />
+
+*Example*: Using href
+
+In _web-app/tmplates/wax.mustache_
+
+bc. Hello {{fullname}}. 
+{{#isLoggedIn}}
+  We're glad you logged in.
+{{/isLoggedIn}}
+
+In the GSP
+
+bc. <mustache:render model="${user}" href="/templates/wax.mustache"
+
+
+
+
+
