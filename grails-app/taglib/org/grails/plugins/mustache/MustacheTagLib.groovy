@@ -19,9 +19,8 @@ class MustacheTagLib {
    *  external and referred to by the href attributes.
    *
    *  @param attrs must include model. If href is provided, the body is skipped and the
-   *  file (relative to the server root) is interpreted. Providing a tid, when a body is
-   *  provided enables later inclusion of the template for use as a javascript template
-   *  with the mustache:layoutTemplates tag.
+   *  file (relative to the server root) is interpreted. Providing a tid enables later 
+   *  inclusion of the template for use as a javascript template with the mustache:layoutTemplates tag.
    */
   def render = { attrs, body ->
     if (!attrs.model) {
@@ -33,19 +32,17 @@ class MustacheTagLib {
       try {
         def template = applicationContext.getResourceByPath(attrs.href as String)?.getFile()
 
-        out << compileMustache(attrs.model, new BufferedReader(new FileReader(template)))        
+        if (attrs.tid) pageTemplates[attrs.tid] = template.getText()        
+        out << compileMustache(attrs.model, new BufferedReader(new FileReader(template)))
       }
       catch (Exception ex) {
         log.error "render failed for ${controllerName}.${actionName} with message: ${ex.getMessage()}"
       }
-      return
     }
-    
-    if (attrs.tid) {
-      pageTemplates[attrs.tid] = body
+    else {
+      if (attrs.tid) pageTemplates[attrs.tid] = body()
+      out << compileMustache(attrs.model, new StringReader(body() as String))      
     }
-        
-    out << compileMustache(attrs.model, new StringReader(body() as String))
   }
   
   /**
@@ -59,7 +56,7 @@ class MustacheTagLib {
   def layoutTemplates = { attrs, body ->
     pageTemplates.each() { id, template ->
       def elementBegin = "<script id=\"${id}\" type=\"text/template\">"
-      out << elementBegin << (template() as String) << "</script>"
+      out << elementBegin << template << "</script>\n"
     }
   }
   

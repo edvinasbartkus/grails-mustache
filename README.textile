@@ -18,7 +18,7 @@ h4. attributes
 
 * *model*: (required) The object instance to use as the data model for the template.
 * *tid* : The Document id to use for a script element for use by javascript
-* *href* : The path, relative to server root, of a Mustache template file (tid is ignored)
+* *href* : The path, relative to server root, of a Mustache template file.
 
 h3. mustache:layoutTemplates
 
