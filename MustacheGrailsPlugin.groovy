@@ -9,7 +9,8 @@ class MustacheGrailsPlugin {
   def pluginExcludes = [
           "grails-app/conf/UrlMappings.groovy",
           "grails-app/views/error.gsp",
-          "grails-app/views/index.gsp"
+          "grails-app/views/index.gsp",
+          "src/mustache/demo.mustache"
   ]
 
   // TODO Fill in these fields
@@ -22,6 +23,8 @@ Brief summary/description of the plugin.
 
   // URL to the plugin's documentation
   def documentation = "http://grails.org/plugin/mustache"
+
+  def watchedResources = [ "file:./src/mustache/*.mustache", "file:./src/mustache/**/*.mustache",  ]
 
   // Extra (optional) plugin metadata
 
