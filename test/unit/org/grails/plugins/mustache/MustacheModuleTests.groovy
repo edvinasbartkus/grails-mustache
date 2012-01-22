@@ -47,4 +47,28 @@ Well, ${{taxed_value}}, after taxes.
 
     cache.deleteOnExit()
   }
+
+  void testModuleWithIdOutput() {
+    MustacheModule module = new MustacheModule(name: 'test', files :[ [path:"/src/mustache/demo.mustache", id:"hm"] ])
+    assertEquals '''<javascript type="text/javascript" id="hm">Hello {{name}}
+You have just won ${{value}}!
+{{#in_ca}}
+Well, ${{taxed_value}}, after taxes.
+{{/in_ca}}</javascript>''', module.wrapped()
+  }
+
+  void testConfigDeclarationWithId() {
+    CH.config.mustache.modules = {
+      test {
+        src "src/mustache/demo.mustache", id:"hmmm"
+      }
+    }
+
+    ModuleManager manager = new ModuleManager()
+    assert manager.modules.size() == 1
+
+    MustacheModule module = manager.modules.first()
+    assertEquals module.files.first().id, "hmmm"
+  }
+
 }
