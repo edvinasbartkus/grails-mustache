@@ -28,11 +28,6 @@ h3. Examples
 
 *Example*: Inline mustache with script generation
 
-bc. def show(Long id) {
-    def user = B.get(id)
-    [user: user.properties] //Note that the property needs to be usable as a map, which a plain GORM object isn't.
-  }
-
 bc. <mustache:render model="${user}" tid="user-greeting">
   Hello {{fullname}}. 
   {{#isLoggedIn}}
@@ -53,7 +48,16 @@ bc. Hello {{fullname}}.
 
 In the GSP
 
-bc. <mustache:render model="${user}" href="/templates/wax.mustache"
+bc. <mustache:render model="${user}" href="/templates/wax.mustache">
+
+*Example*: Controller code for the above examples
+
+bc. def show(Long id) {
+    def user = B.get(id)
+    [user: user.properties] //Note that the property needs to be usable as a map, which a plain GORM object isn't.
+  }
+
+
 
 
 
