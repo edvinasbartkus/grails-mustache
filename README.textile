@@ -16,7 +16,7 @@ Renders inline Mustache template code or Mustache template files server-side. In
 
 h4. attributes
 
-* *model*: (required) The object instance to use as the data model for the template.
+* *model*: (required) The object instance to use as the data model for the template. Note, the model needs to be able to be used as a map (ie it is cast to a map during rendering).
 * *tid* : The Document id to use for a script element for use by javascript
 * *href* : The path, relative to server root, of a Mustache template file.
 
@@ -27,6 +27,10 @@ Renders script elements for each of the inline templates that were given a *tid*
 h3. Examples
 
 *Example*: Inline mustache with script generation
+bc. def show(Long id) {
+    def user = B.get(id)
+    [user: user.properties] //Note that the property needs to be usable as a map, which a plain GORM object isn't.
+  }
 
 bc. <mustache:render model="${user}" tid="user-greeting">
   Hello {{fullname}}. 
