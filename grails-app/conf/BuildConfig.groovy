@@ -26,7 +26,8 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
 
-        runtime 'com.github.spullara.mustache.java:builder:0.6'
+        build 'com.github.spullara.mustache.java:compiler:0.8.8' 
+        test 'org.yaml:snakeyaml:1.11'
     }
 
     plugins {

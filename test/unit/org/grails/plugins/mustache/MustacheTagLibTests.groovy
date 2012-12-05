@@ -3,6 +3,9 @@ package org.grails.plugins.mustache
 import grails.test.mixin.*
 import org.junit.*
 
+import org.springframework.core.io.*
+import org.yaml.snakeyaml.Yaml
+
 @TestFor(MustacheTagLib)
 class MustacheTagLibTests {
 
@@ -26,4 +29,40 @@ class MustacheTagLibTests {
     def remove = GroovySystem.metaClassRegistry.&removeMetaClass
     remove MustacheTagLib
   }
+  void testSpec() {
+    int specPasses = 0, specFails = 0
+    new File("test/unit/resources/spec").eachFileRecurse( groovy.io.FileType.FILES ) { file ->
+        println "Testing file ${file}"
+        def yaml = new Yaml() 
+        def result = yaml.load(file.text)
+        StringWriter out = new StringWriter()
+        MustacheTagLib.metaClass.out = out
+        result.tests.each { test ->
+            def map = [model: test.data as Map]
+            println "Executing spec ${test.name}"
+            try { //TODO - manage partials
+                new MustacheTagLib().render(map) {
+                    return test.template
+                }
+            } catch (Exception e) {
+                e.printStackTrace()
+            }
+            if(!(test.expected.toString().equals(out.toString()) || test.expected.toString().replaceAll('"', '').equals(out.toString()))) { //FIXME - Quote issues in the matching...
+                println "Spec ${test.name} failed -> ${test.expected} != ${out.toString()}"
+                specFails++
+            } else {
+                println "Spec ${test.name} -> ${test.expected} == ${out.toString()} passed"
+                specPasses++
+            }
+//            assert(test.expected.toString().equals(out.toString()) || test.expected.toString().replaceAll('"', '').equals(out.toString())) //FIXME - Quote issues in the matching...
+            out.getBuffer().setLength(0)
+        }
+    }
+    println "Spec fails: ${specFails}"
+    println "Spec passes: ${specPasses}"
+    def remove = GroovySystem.metaClassRegistry.&removeMetaClass
+    remove MustacheTagLib
+    assert specFails == 0 //The number of specs that fail should be zero
+  }
+
 }

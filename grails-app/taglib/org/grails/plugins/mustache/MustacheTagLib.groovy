@@ -2,9 +2,9 @@ package org.grails.plugins.mustache
 
 import java.io.Reader
 import java.io.BufferedReader
-import com.sampullara.util.FutureWriter
-import com.sampullara.mustache.MustacheBuilder
+import com.github.mustachejava.*
 import org.codehaus.groovy.grails.web.pages.TagLibraryLookup
+import java.util.concurrent.Executors
 
 class MustacheTagLib {
   static namespace = "mustache"
@@ -62,12 +62,11 @@ class MustacheTagLib {
   
   private def compileMustache(def model, Reader reader) {
     java.io.ByteArrayOutputStream baos = new ByteArrayOutputStream()
-    FutureWriter writer = new FutureWriter(new OutputStreamWriter(baos))
-    
-    new MustacheBuilder()
-            .build(reader, "mustacheOutput")
-            .execute(writer, model as Map)
-    writer.flush()
+    def writer = new OutputStreamWriter(baos)
+    def mf = new DeferringMustacheFactory()
+    mf.setExecutorService(Executors.newCachedThreadPool())
+    Mustache m = mf.compile(reader, "mustacheOutput")
+    m.execute(writer, model as Map).flush()
     return baos.toString()    
   }
 
