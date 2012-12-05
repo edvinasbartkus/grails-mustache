@@ -63,8 +63,9 @@ class MustacheTagLib {
   private def compileMustache(def model, Reader reader) {
     java.io.ByteArrayOutputStream baos = new ByteArrayOutputStream()
     def writer = new OutputStreamWriter(baos)
-    def mf = new DeferringMustacheFactory()
-    mf.setExecutorService(Executors.newCachedThreadPool())
+    //def mf = new DeferringMustacheFactory()
+    def mf = new DefaultMustacheFactory()
+    //mf.setExecutorService(Executors.newCachedThreadPool())
     Mustache m = mf.compile(reader, "mustacheOutput")
     m.execute(writer, model as Map).flush()
     return baos.toString()    

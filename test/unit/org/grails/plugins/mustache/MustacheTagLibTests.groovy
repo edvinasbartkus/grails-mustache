@@ -31,12 +31,11 @@ class MustacheTagLibTests {
   }
   void testSpec() {
     int specPasses = 0, specFails = 0
+    StringWriter out = new StringWriter()
+    MustacheTagLib.metaClass.out = out
     new File("test/unit/resources/spec").eachFileRecurse( groovy.io.FileType.FILES ) { file ->
         println "Testing file ${file}"
         def yaml = new Yaml() 
-        def result = yaml.load(file.text)
-        StringWriter out = new StringWriter()
-        MustacheTagLib.metaClass.out = out
         result.tests.each { test ->
             def map = [model: test.data as Map]
             println "Executing spec ${test.name}"
@@ -47,7 +46,7 @@ class MustacheTagLibTests {
             } catch (Exception e) {
                 e.printStackTrace()
             }
-            if(!(test.expected.toString().equals(out.toString()) || test.expected.toString().replaceAll('"', '').equals(out.toString()))) { //FIXME - Quote issues in the matching...
+            if(!(test.expected.toString().trim().equals(out.toString().trim()) || test.expected.toString().trim().replaceAll('"', '').equals(out.toString().trim()))) { //FIXME - Quote issues in the matching...
                 println "Spec ${test.name} failed -> ${test.expected} != ${out.toString()}"
                 specFails++
             } else {
