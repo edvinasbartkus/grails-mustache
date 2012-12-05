@@ -36,6 +36,7 @@ class MustacheTagLibTests {
     new File("test/unit/resources/spec").eachFileRecurse( groovy.io.FileType.FILES ) { file ->
         println "Testing file ${file}"
         def yaml = new Yaml() 
+        def result = yaml.load(file.text)
         result.tests.each { test ->
             def map = [model: test.data as Map]
             println "Executing spec ${test.name}"
