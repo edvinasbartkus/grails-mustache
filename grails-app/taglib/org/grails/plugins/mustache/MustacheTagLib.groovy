@@ -23,7 +23,7 @@ class MustacheTagLib {
    *  inclusion of the template for use as a javascript template with the mustache:layoutTemplates tag.
    */
   def render = { attrs, body ->
-    if (!attrs.model) {
+    if (attrs.model == null) {
       log.error "model attribute was not specified for ${controllerName}.${actionName}"
       return
     }
