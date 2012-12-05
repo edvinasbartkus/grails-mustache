@@ -16,7 +16,7 @@ Renders inline Mustache template code or Mustache template files server-side. In
 
 h4. attributes
 
-* *model*: (required) The object instance to use as the data model for the template.
+* *model*: (required) The object instance to use as the data model for the template. Note, the model needs to be able to be used as a map (ie it is cast to a map during rendering).
 * *tid* : The Document id to use for a script element for use by javascript
 * *href* : The path, relative to server root, of a Mustache template file.
 
@@ -35,7 +35,7 @@ bc. <mustache:render model="${user}" tid="user-greeting">
   {{/isLoggedIn}}
 </mustache:render>
 ...
-<mustache:layoutResources />
+<mustache:layoutTemplates />
 
 *Example*: Using href
 
@@ -48,7 +48,16 @@ bc. Hello {{fullname}}.
 
 In the GSP
 
-bc. <mustache:render model="${user}" href="/templates/wax.mustache"
+bc. <mustache:render model="${user}" href="/templates/wax.mustache">
+
+*Example*: Controller code for the above examples
+
+bc. def show(Long id) {
+    def user = B.get(id)
+    [user: user.properties] //Note that the property needs to be usable as a map, which a plain GORM object isn't.
+  }
+
+
 
 
 
